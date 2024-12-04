@@ -7,13 +7,13 @@ import warnings
 
 warnings.simplefilter('ignore')
 
-# Load YAML data
+# YAML data laden
 with open('./kaggle_dataset/data.yaml', 'r') as f:
     data_structure = yaml.safe_load(f)
     print(data_structure)
 
 class_names = data_structure['names']
-class_names.append('Normal')  # Assuming 'Normal' should be a separate class
+class_names.append('Normal')  # 'Normal' als afzonderlijke klasse
 
 train_image_path = pathlib.Path('./kaggle_dataset/train/images/')
 train_label_path = pathlib.Path('./kaggle_dataset/train/labels/')
@@ -50,7 +50,7 @@ def make_image_label(image_path, label_path, size=(224, 224)):
             else:
                 parts = label_content.split(' ')
                 label = parts[0]
-                bbox = list(map(float, parts[1:5]))  # Assuming bbox format: [x_center, y_center, width, height]
+                bbox = list(map(float, parts[1:5]))  #  bbox format: [x_center, y_center, width, height]
                 one_hot_label = [0 for _ in range(len(class_names))]
                 one_hot_label[int(label)] = 1
             if not is_blank:
@@ -61,7 +61,7 @@ def make_image_label(image_path, label_path, size=(224, 224)):
             image_file = tf.io.read_file(str(i))
             image_tensor = tf.io.decode_image(image_file)
             image_tensor = tf.image.resize(image_tensor, size)
-            image_tensors.append(image_tensor.numpy())  # Convert to NumPy array
+            image_tensors.append(image_tensor.numpy())  # naar NumPy array omzetten
             print(f"Image tensor shape: {image_tensor.shape}, Label tensor: {one_hot_label}, BBox: {bbox}")
 
     print(f"Processed {n} images.")

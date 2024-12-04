@@ -1,0 +1,10 @@
+^C:\USERS\ALEX\DOCUMENTS\3DE JAAR- INNO\ADVANCE TECHNICAL PROGRAMMING\SYSTEM_SIMULATIE\BUILD\CMAKEFILES\A3048B4AE32B4654DAEA75207C336380\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" "-SC:/Users/Alex/Documents/3de Jaar- INNO/Advance Technical Programming/System_simulatie" "-BC:/Users/Alex/Documents/3de Jaar- INNO/Advance Technical Programming/System_simulatie/build" --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file "C:/Users/Alex/Documents/3de Jaar- INNO/Advance Technical Programming/System_simulatie/build/System_simulatie.sln"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
