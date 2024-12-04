@@ -1,0 +1,9 @@
+Testvector 1: Voorspeld label = lente
+Testvector 2: Voorspeld label = winter
+Testvector 3: Voorspeld label = lente
+Testvector 4: Voorspeld label = zomer
+Testvector 5: Voorspeld label = lente
+Testvector 6: Voorspeld label = zomer
+Testvector 7: Voorspeld label = winter
+Testvector 8: Voorspeld label = winter
+Testvector 9: Voorspeld label = zomer
