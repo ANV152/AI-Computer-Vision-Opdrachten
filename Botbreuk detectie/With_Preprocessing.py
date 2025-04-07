@@ -19,15 +19,14 @@ class_names.append('Normal')  # Assuming 'Normal' should be a separate class
 # Laad de verwerkte trainingsdata
 data = np.load('train_data_with_bbox.npz', allow_pickle=True)
 train_image_tensors = np.array(data['images'])
-train_label_tensors = np.array(data['labels'])  # Labels voor classificatie
-train_bbox_tensors = np.array(data['bboxes'])  # Bounding boxes
+train_label_tensors = np.array(data['labels'])  
+train_bbox_tensors = np.array(data['bboxes'])  
 
 print(f"Train images shape: {train_image_tensors.shape}")
 print(f"Train labels shape: {train_label_tensors.shape}")
 print(f"Train bounding boxes shape: {train_bbox_tensors.shape}")
 
-
-input_shape = train_image_tensors[0].shape#multi-output model
+input_shape = train_image_tensors[0].shape
 
 model = Sequential([
     Conv2D(32, (3, 3), activation='relu', input_shape=input_shape),
@@ -38,22 +37,17 @@ model = Sequential([
 ])
 
 # Classificatie-uitgang (aantal klassen = len(class_names))
-"""
-    de onderstaande lijn proberen we de uitvoer van het model (model.output) te gebruiken als invoer voor de Dense-laag.S
-"""
-classification_output = Dense(len(class_names), activation='softmax', name='classification')(model.output)#hiermee 
-
-# bbox-uitgang (4 coördinaten)
+classification_output = Dense(len(class_names), activation='softmax', name='classification')(model.output)
+# 4 COORDINATEN
 bbox_output = Dense(4, name='bbox')(model.output)
 
+# Combineer de outputs in een multi-output model
 multi_output_model = tf.keras.Model(inputs=model.input, outputs=[classification_output, bbox_output])
-
-"""multi output model omdat bounding boxes worden apart voorgespeld"""
 multi_output_model.compile(
     optimizer='adam',
     loss={
-        'classification': 'categorical_crossentropy',  
-        'bbox': 'mse' 
+        'classification': 'categorical_crossentropy',  # Voor classificatie
+        'bbox': 'mse'  # Mean Squared Error voor bounding boxes 
     },
     loss_weights={
         'classification': 1.0,  # Gewicht voor classificatie
@@ -64,8 +58,7 @@ multi_output_model.compile(
         'bbox': ['mae']  # Mean absolute error voor bounding boxes
     }
 )
-
-# Train het model
+#*********** TRAIN ************
 history = multi_output_model.fit(
     train_image_tensors,
     {'classification': train_label_tensors, 'bbox': train_bbox_tensors},
@@ -74,11 +67,11 @@ history = multi_output_model.fit(
 )
 
 ######### TEST ###########
-
+# Laad de testdata
 test_data = np.load('test_data_with_bbox.npz', allow_pickle=True)
 test_image_tensors = np.array(test_data['images'])
-test_label_tensors = np.array(test_data['labels'])  
-test_bbox_tensors = np.array(test_data['bboxes']) 
+test_label_tensors = np.array(test_data['labels'])  # Labels voor classificatie
+test_bbox_tensors = np.array(test_data['bboxes'])  # Bounding boxes
 
 # Evalueer het model
 test_loss = multi_output_model.evaluate(
