@@ -1,2 +1,2 @@
 # AI algoritmes en Computer-Vision-Eindopdracht
-Dit is mijn privé repo waar ik opdrachten uit mijn opleiding graag met iedereen wil delen.
+Dit is mijn repo waar ik opdrachten uit mijn opleiding en eigen projecten graag met iedereen wil delen.
