@@ -100,7 +100,7 @@ pop_target = (36, 360)
 pop_length = 100
 pop1 = Population(pop_length)
 # pop1.populate(pop_length)
-n_generations = 500
+n_generations = 250
 fitness_history = []
 std_fitness = []
 for _ in range(n_generations):
@@ -110,7 +110,7 @@ for _ in range(n_generations):
     std_fitness.append(stdev_fitness)
 
     print(score, end=", ")
-    if score < 0.01:
+    if score < 0.05:
         break
 
 best = min(pop1.population, key = lambda x: fitness(x))
@@ -124,28 +124,59 @@ for indx, card in enumerate(best):
         sum_pile.append(indx+1)
     elif card == 2:
         prod_pile.append(indx+1)
-print("Best phenotype as value: ", decoded_best_indv, sum_distance, prod_distance)
+print("Best phenotype as value: ", decoded_best_indv)
+
 print("Best phenotype as piles: ", sum_pile, " | ", prod_pile )
 
 
 
+pile_sum = sum(sum_pile)
+pile_prod = 1
+for value in prod_pile:
+    pile_prod *= value
+# differences from targets
+diff_sum = pop_target[0] - pile_sum
+diff_prod = pop_target[1] - pile_prod
+label_text = (
+    f"Sum pile = {pile_sum} (diff {diff_sum:+d})\n"
+    f"Prod pile = {pile_prod} (diff {diff_prod:+d})"
+)
+
 fig, ax1 = plt.subplots()
 
-ax1.plot(fitness_history, color="blue")
-ax1.set_ylabel("Fitness History")
-ax1.set_ylim(top=500, bottom=0)
-ax2 = ax1.twinx()
-ax2.plot(std_fitness, color= "red")
-ax2.set_ylabel("Standard dev")
-plt.title("Pop. score history")
-fig.legend()
-# plt.xlabel("Generations")
-# plt.ylabel("Score")
-plt.grid(True)
-plt.ylim(top=500, bottom=0)
-plt.show()
+line1 = ax1.plot(
+    fitness_history,
+    color="blue",
+    label="Fitness History"
+)
 
-# print("\n new pop: ")
-# for i in range(len(pop1.population)):
-#     
-#     print((pop1.population[i], fitness(pop1.population[i])), end=" ")
+ax1.set_ylabel("Fitness History")
+ax1.set_ylim(top=1000, bottom=0)
+ax1.set_xlabel("Aantal generaties")
+
+ax2 = ax1.twinx()
+
+line2 = ax2.plot(
+    std_fitness,
+    color="red",
+    label="Standard Deviation"
+)
+
+ax2.set_ylabel("Standard Dev")
+ax2.set_ylim(top = 1000, bottom= 0)
+# Combine both lines into one legend
+lines = line1 + line2
+labels = [l.get_label() for l in lines]
+
+ax2.legend(lines, labels, loc="upper right")
+
+# leave room on the right for the label outside the axes
+fig.subplots_adjust(bottom=0.25)
+# place the label in figure coordinates to the right of the axes
+fig.text(0.35,0.1, label_text, fontsize=10, va='center', ha='left', bbox=dict(facecolor='white', alpha=0.85, edgecolor='none'))
+
+plt.title("Pop. score history")
+
+plt.grid(True)
+
+plt.show()
